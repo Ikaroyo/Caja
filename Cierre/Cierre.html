@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora de Fórmulas</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 0;
+            margin: 0;
+            transition: background-color 0.3s, color 0.3s;
+            padding-top: 10px;
+        }
+
+        h1 {
+            padding: 0;
+            margin: 0;
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            max-width: 300px;
+        }
+
+        .input-group {
+            display: flex;
+            align-items: center;
+            margin: 5px 0;
+        }
+
+        input[type="text"] {
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            width: 70%;
+            font-weight: bold;
+        }
+
+        button {
+            margin-left: 5px;
+            padding: 10px;
+            font-size: 16px;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            flex-shrink: 0;
+        }
+
+        .addButton {
+            background-color: #007bff;
+        }
+
+        .clearButton {
+            background-color: #28a745;
+        }
+
+        .deleteContentButton {
+            background-color: #dc3545;
+        }
+
+        .removeButton {
+            background-color: #f39c12;
+        }
+
+        button:hover {
+            opacity: 0.8;
+        }
+
+        .total {
+            font-weight: bold;
+            margin-top: 20px;
+            margin-bottom: 20px;
+            font-size: 20px;
+            padding: 10px;
+            border-radius: 4px;
+            text-align: center;
+            background-color: rgba(0, 123, 255, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            /* Espacio entre el texto del total y el botón */
+        }
+
+        .theme-toggle {
+            background-color: #6c757d;
+            margin-bottom: 20px;
+        }
+
+        /* Light theme */
+        body.light {
+            background-color: #f9f9f9;
+            color: #333;
+        }
+
+        body.light .total {
+            background-color: rgba(0, 123, 255, 0.1);
+        }
+
+        /* Dark theme */
+        body.dark {
+            background-color: #333;
+            color: #f9f9f9;
+        }
+
+        body.dark .total {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .copyButton {
+            background-color: #007bff;
+            padding: 10px;
+            font-size: 16px;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .copyButton:hover {
+            background-color: #0056b3;
+        }
+
+        .toast {
+            position: fixed;
+            top: 20px;
+            /* Ajusta la distancia desde la parte superior */
+            left: 50%;
+            /* Centra horizontalmente */
+            transform: translateX(-50%);
+            /* Compensa la mitad del ancho */
+            z-index: 9999;
+            background-color: #007bff;
+            color: white;
+            padding: 10px;
+            border-radius: 4px;
+            display: none;
+            font-size: 16px;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+            /* Opcional: Añadir sombra */
+        }
+
+        .toast.show {
+            display: block;
+        }
+
+        .toast.hide {
+            display: none;
+        }
+
+
+
+
+        /* Media Queries para pantallas pequeñas */
+        @media (max-width: 600px) {
+            .container {
+                max-width: 100%;
+            }
+
+            input[type="text"] {
+                width: 100%;
+            }
+
+            .buttons-menu {
+                scale: 0.8;
+            }
+
+            .input-group {
+                scale: 0.8;
+                padding: 0;
+                margin: 0;
+            }
+
+            .total {
+                scale: 0.8;
+                margin: 0;
+                width: 100%;
+            }
+
+            .container {
+                margin: 0;
+                padding: 0;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container" id="inputContainer">
+        <!-- Celdas de entrada se generarán aquí -->
+    </div>
+
+    <div class="total" id="total">
+        Total: 0
+        <button class="copyButton" id="copyButton">
+            <i class="fa-solid fa-copy"></i>
+        </button>
+    </div>
+
+    <div class="buttons-menu">
+        <button id="addButton" class="addButton"><i class="fa-solid fa-plus"></i></button>
+        <button id="removeButton" class="removeButton"><i class="fa-solid fa-minus"></i></button>
+        <button id="clearButton" class="clearButton"><i class="fa-solid fa-trash"></i></button>
+        <button id="themeToggle" class="theme-toggle">
+            <i id="themeToggleIcon" class="fa-solid fa-moon"></i>
+        </button>
+    </div>
+
+    <div class="toast">
+        <i class="fa-solid fa-check"></i>
+        <span id="toastMessage"></span>
+    </div>
+
+    <script>
+        const inputContainer = document.getElementById('inputContainer');
+        const totalDisplay = document.getElementById('total');
+        const copyButton = document.getElementById('copyButton');
+        const themeToggle = document.getElementById('themeToggle');
+
+
+        function toast(message) {
+            const toastElement = document.querySelector('.toast');
+            const toastMessage = document.getElementById('toastMessage');
+            toastMessage.textContent = message;
+            toastElement.classList.add('show');
+
+            setTimeout(() => {
+                toastElement.classList.remove('show');
+            }, 3000);
+        }
+
+
+        function calculateTotal() {
+            let total = 0;
+            const formulas = document.querySelectorAll('.formula');
+            formulas.forEach(input => {
+                const value = input.value.trim();
+                if (value) {
+                    try {
+                        const result = eval(value);
+                        if (typeof result === 'number' && !isNaN(result)) {
+                            total += result;
+                        }
+                    } catch (e) {
+                        // Ignorar errores de evaluación
+                    }
+                }
+            });
+
+            totalDisplay.firstChild.textContent = 'Total: ' + total;
+        }
+
+        function createInput(value = '') {
+            const inputGroup = document.createElement('div');
+            inputGroup.className = 'input-group';
+
+            const input = document.createElement('input');
+            input.type = 'text';
+            input.className = 'formula';
+            input.placeholder = 'Introduce una fórmula';
+            input.value = value;
+            input.tabIndex = 1;
+
+            const deleteContentButton = document.createElement('button');
+            deleteContentButton.className = 'deleteContentButton';
+            deleteContentButton.textContent = 'X';
+            deleteContentButton.onclick = () => {
+                input.value = '';
+                calculateTotal(); // Recalcular el total al limpiar contenido
+            };
+
+            input.addEventListener('keyup', (event) => {
+                calculateTotal();
+            });
+
+            inputGroup.appendChild(input);
+            inputGroup.appendChild(deleteContentButton);
+            inputContainer.appendChild(inputGroup);
+        }
+
+        function saveInputs() {
+            const inputs = [];
+            document.querySelectorAll('.formula').forEach(input => {
+                inputs.push(input.value);
+            });
+            localStorage.setItem('formulas', JSON.stringify(inputs));
+        }
+
+        function loadInputs() {
+            const storedInputs = localStorage.getItem('formulas');
+            if (storedInputs) {
+                const inputs = JSON.parse(storedInputs);
+                inputs.forEach(value => createInput(value));
+            } else {
+                createInput(); // Inicializar con una casilla si no hay datos guardados
+            }
+        }
+
+        // Theme management
+        function toggleTheme() {
+            const currentTheme = document.body.classList.contains('dark') ? 'dark' : 'light';
+            const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+            const toggleIcon = document.querySelector('#themeToggleIcon');
+            if (newTheme === 'light') {
+                toggleIcon.classList.remove('fa-moon');
+                toggleIcon.classList.add('fa-sun');
+            } else {
+                toggleIcon.classList.remove('fa-sun');
+                toggleIcon.classList.add('fa-moon');
+            }
+            document.body.classList.remove(currentTheme);
+            document.body.classList.add(newTheme);
+            localStorage.setItem('theme', newTheme);
+        }
+
+        function loadTheme() {
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            document.body.classList.add(savedTheme);
+        }
+
+        document.getElementById('addButton').addEventListener('click', () => {
+            createInput();
+            saveInputs(); // Guardar al agregar
+        });
+
+        document.getElementById('removeButton').addEventListener('click', () => {
+            const inputGroups = document.querySelectorAll('.input-group');
+            if (inputGroups.length > 0) {
+                inputGroups[inputGroups.length - 1].remove();
+                saveInputs(); // Guardar al eliminar
+                calculateTotal(); // Recalcular total al eliminar
+            }
+        });
+
+        document.getElementById('clearButton').addEventListener('click', () => {
+            const formulas = document.querySelectorAll('.formula');
+            formulas.forEach(input => {
+                input.value = '';
+            });
+            totalDisplay.firstChild.textContent = 'Total: 0';
+            saveInputs(); // Guardar estado al limpiar
+        });
+
+        themeToggle.addEventListener('click', toggleTheme);
+
+        // Copiar total al portapapeles
+        copyButton.addEventListener('click', () => {
+            const totalText = totalDisplay.firstChild.textContent.split(' ')[1];
+            navigator.clipboard.writeText(totalText);
+            toast('Total copiado al portapapeles');
+
+        });
+
+        // Cargar entradas y tema guardado al iniciar
+        loadInputs();
+        loadTheme();
+    </script>
+
+    <script src="https://kit.fontawesome.com/8eceaa5955.js" crossorigin="anonymous"></script>
+</body>
+
+</html>

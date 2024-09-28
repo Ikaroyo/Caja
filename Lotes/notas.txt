@@ -1,0 +1,12 @@
+Fecha lote	date
+Cajero	String
+Nro de lote	Int
+Importe OSM	float
+Importe Municipalidad	float
+Importe Credito	float
+Importe Debito	float
+Cheques	array de floats
+Otro	float
+Comentarios	String
+
+filepath	string

@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css">
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://kit.fontawesome.com/8eceaa5955.js" crossorigin="anonymous"></script>
+    <title>Gestión de Lotes</title>
+
+
+</head>
+
+<body>
+
+    <div class="container mt-4">
+        <h1>Gestión de Lotes</h1>
+        <ul class="nav nav-tabs" id="myTab" role="tablist">
+            <li class="nav-item">
+                <a class="nav-link active" id="agregar-lote-tab" data-toggle="tab" href="#agregar-lote"
+                    role="tab">Agregar Lote</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="listar-lotes-tab" data-toggle="tab" href="#listar-lotes" role="tab">Listar
+                    Lotes</a>
+            </li>
+        </ul>
+        <div class="tab-content" id="myTabContent">
+            <div class="tab-pane fade show active" id="agregar-lote" role="tabpanel">
+                <form id="formAgregarLote">
+                    <div class="form-group">
+                        <label for="fechaLote">Fecha Lote:</label>
+                        <input type="date" class="form-control" id="fechaLote">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="cajero">Cajero:</label>
+                        <select class="form-control" id="cajero">
+                            <option value="Carina">Carina</option>
+                            <option value="Franco">Franco</option>
+                            <option value="Silvio">Silvio</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="nroLote">Nro Lote:</label>
+                        <input type="number" class="form-control" id="nroLote" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="importeOSM">Importe OSM:</label>
+                        <input type="number" step="0.01" class="form-control" id="importeOSM" value="0">
+                    </div>
+                    <div class="form-group">
+                        <label for="importeEfectivoOSM">Efectivo OSM:</label>
+                        <input type="number" class="form-control" id="importeEfectivoOSM" disabled>
+                    </div>
+                    <div class="form-group">
+                        <label for="importeMunicipalidad">Importe Municipalidad:</label>
+                        <input type="number" step="0.01" class="form-control" id="importeMunicipalidad" value="0">
+                    </div>
+                    <div class="form-group">
+                        <label for="importeCredito">Importe T. Crédito:</label>
+                        <input type="number" step="0.01" class="form-control" id="importeCredito" value="0">
+                    </div>
+                    <div class="form-group">
+                        <label for="importeDebito">Importe T. Débito:</label>
+                        <input type="number" step="0.01" class="form-control" id="importeDebito" value="0">
+                    </div>
+                    <div class="form-group">
+                        <label>Cheques:</label>
+                        <div id="chequesContainer">
+                            <input type="number" step="0.01" class="form-control mb-2" placeholder="Cheque" value="0">
+                        </div>
+                        <button type="button" class="btn btn-secondary" id="agregarCheque">Agregar Cheque</button>
+                    </div>
+                    <div class="form-group">
+                        <label for="otro">Otro:</label>
+                        <input type="number" step="0.01" class="form-control" id="otro" value="0">
+                    </div>
+                    <div class="form-group">
+                        <label for="comentarios">Comentarios:</label>
+                        <textarea class="form-control" id="comentarios"></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Agregar Lote</button>
+                </form>
+            </div>
+            <div class="tab-pane fade" id="listar-lotes" role="tabpanel">
+                <div class="form-group">
+                    <label for="fechaInicio">Fecha Inicio:</label>
+                    <input type="date" class="form-control" id="fechaInicio" required>
+                </div>
+                <div class="form-group">
+                    <label for="fechaFin">Fecha Fin:</label>
+                    <input type="date" class="form-control" id="fechaFin" required>
+                </div>
+                <div class="form-group">
+                    <label for="cajeroFiltro">Cajero:</label>
+                    <select class="form-control" id="cajeroFiltro">
+                        <option value="Carina">Carina</option>
+                        <option value="Franco">Franco</option>
+                        <option value="Silvio">Silvio</option>
+                    </select>
+                </div>
+                <button id="listarLotes" class="btn btn-secondary">Listar Lotes</button>
+                <table class="table mt-3" id="tablaLotes">
+                    <thead>
+                        <tr>
+                            <th>Fecha Lote</th>
+                            <th>Cajero</th>
+                            <th>Nro Lote</th>
+                            <th>Importe OSM</th>
+                            <th>Importe Efectivo OSM</th>
+                            <th>Importe Municipalidad</th>
+                            <th>Importe T. Crédito</th>
+                            <th>Importe T. Débito</th>
+                            <th>Cheques</th>
+                            <th>Otro</th>
+                            <th>Comentarios</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="bodyTablaLotes">
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div id="toast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+        <div class="toast-header">
+            <strong class="me-auto">Notificación</strong>
+            <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+        <div class="toast-body">
+            Aquí va el mensaje.
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+
+    <script>
+        var filePathListarLotes = '.\\Caja\\ass.json';
+
+        $(document).ready(function () {
+
+            // Establecer la fecha actual al cargar la página
+            $('#fechaLote').val(new Date().toISOString().split('T')[0]);
+
+            $('#agregarCheque').on('click', function () {
+                $('#chequesContainer').append('<input type="number" step="0.01" class="form-control mb-2" placeholder="Cheque" value="0">');
+            });
+
+            // Función para calcular Efectivo OSM
+            function calcularEfectivoOSM() {
+                const importeOSM = parseFloat($('#importeOSM').val()) || 0;
+                const importeCredito = parseFloat($('#importeCredito').val()) || 0;
+                const importeDebito = parseFloat($('#importeDebito').val()) || 0;
+                const otro = parseFloat($('#otro').val()) || 0;
+                const sumaCheques = Array.from($('#chequesContainer input')).reduce((sum, input) => sum + (parseFloat($(input).val()) || 0), 0);
+
+                const efectivoOSM = importeOSM - importeCredito - importeDebito - sumaCheques - otro;
+                $('#importeEfectivoOSM').val(efectivoOSM);
+            }
+
+            // Escuchar cambios en los campos relevantes
+            $('#importeOSM, #importeCredito, #importeDebito, #otro').on('input', calcularEfectivoOSM);
+            $(document).on('input', '#chequesContainer input', calcularEfectivoOSM);
+
+            // Evento para agregar un lote
+            $('#formAgregarLote').on('submit', function (e) {
+                e.preventDefault();
+
+                // Obtener valores y convertir a tipos adecuados
+                const fechaLote = $('#fechaLote').val() || "Sin fecha";
+                const cajero = $('#cajero').val();
+                const nroLote = parseInt($('#nroLote').val()) || 0; // Convertir a entero
+                const importeOSM = parseFloat($('#importeOSM').val()) || 0; // Convertir a float
+                const importeEfectivoOSM = parseFloat($('#importeEfectivoOSM').val()) || 0; // Convertir a float
+                const importeMunicipalidad = parseFloat($('#importeMunicipalidad').val()) || 0; // Convertir a float
+                const importeCredito = parseFloat($('#importeCredito').val()) || 0; // Convertir a float
+                const importeDebito = parseFloat($('#importeDebito').val()) || 0; // Convertir a float
+                const cheques = Array.from($('#chequesContainer input')).map(input => parseFloat($(input).val()) || 0); // Convertir a float
+                const otro = parseFloat($('#otro').val()) || 0; // Convertir a float
+                const comentarios = $('#comentarios').val();
+                const filePath = filePathListarLotes;
+
+                // Crear el objeto nuevoLote
+                const nuevoLote = {
+                    fechaLote,
+                    cajero,
+                    nroLote,
+                    importeOSM,
+                    importeEfectivoOSM,
+                    importeMunicipalidad,
+                    importeCredito,
+                    importeDebito,
+                    cheques,
+                    otro,
+                    comentarios,
+                    filePath
+                };
+
+                console.log(nuevoLote);
+
+                // Enviar nuevo lote a la API
+                $.ajax({
+                    url: 'http://localhost:5127/lotes/agregar',
+                    type: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify(nuevoLote),
+                    success: function (response) {
+                        mostrarToast('Lote agregado correctamente.');
+                    },
+                    error: function (xhr) {
+                        mostrarToast('Error al agregar el lote: ' + xhr.responseText);
+                    }
+                });
+            });
+
+            $('#listarLotes').on('click', function () {
+                const fechaInicio = $('#fechaInicio').val();
+                const fechaFin = $('#fechaFin').val();
+                const cajeroFiltro = $('#cajeroFiltro').val();
+
+                $.ajax({
+                    url: 'http://localhost:5127/lotes/listarEntreFechasYCajero',
+                    type: 'GET',
+                    data: {
+                        fechaInicio,
+                        fechaFin,
+                        cajero: cajeroFiltro,
+                        filePath: filePathListarLotes // Puedes pasar el filePath si es necesario
+                    },
+                    success: function (data) {
+                        $('#bodyTablaLotes').empty();
+
+                        // Variables para acumular las sumas
+                        let totalImporteOSM = 0;
+                        let totalImporteEfectivoOSM = 0;
+                        let totalImporteMunicipalidad = 0;
+
+                        data.forEach(lote => {
+                            // Asegurarse de que Cheques sea un array
+                            const cheques = Array.isArray(lote.cheques) ? lote.cheques : [];
+
+                            // Formatear cheques aplicando toFixed solo si son números
+                            const chequesDisplay = cheques.length === 1
+                                ? cheques[0].toFixed(2)
+                                : cheques.map(cheque => cheque.toFixed(2)).join(', ');
+
+                            // Formatear la fecha como dd/MM/yyyy
+                            const fechaFormateada = lote.fechaLote ? new Date(lote.fechaLote).toLocaleDateString('es-AR') : 'N/A';
+
+                            // Sumar los importes
+                            totalImporteOSM += parseFloat(lote.importeOSM) || 0;
+                            totalImporteEfectivoOSM += parseFloat(lote.importeEfectivoOSM) || 0;
+                            totalImporteMunicipalidad += parseFloat(lote.importeMunicipalidad) || 0;
+
+                            $('#bodyTablaLotes').append(`
+                                <tr>
+
+                                    <td class="editable" data-field="fechaLote">
+    <input type="date" value="${lote.fechaLote}">
+</td>
+
+                                    <td contenteditable="true" class="editable" data-field="cajero">${lote.cajero}</td>
+                                    <td contenteditable="true" class="editable" data-field="nroLote">${lote.nroLote}</td>
+                                    <td contenteditable="true" class="editable" data-field="importeOSM">${lote.importeOSM.toFixed(2)}</td>
+                                    <td data-field="importeEfectivoOSM">${lote.importeEfectivoOSM.toFixed(2)}</td>
+                                    <td contenteditable="true" class="editable" data-field="importeMunicipalidad">${lote.importeMunicipalidad.toFixed(2)}</td>
+                                    <td contenteditable="true" class="editable" data-field="importeCredito">${lote.importeCredito.toFixed(2)}</td>
+                                    <td contenteditable="true" class="editable" data-field="importeDebito">${lote.importeDebito.toFixed(2)}</td>
+                                    <td contenteditable="true" class="editable" data-field="cheques">${chequesDisplay}</td>
+                                    <td contenteditable="true" class="editable" data-field="otro">${lote.otro.toFixed(2)}</td>
+                                    <td contenteditable="true" class="editable" data-field="comentarios">${lote.comentarios}</td>
+                                    <td>
+                                        <button class="btn btn-success btn-sm actualizar-lote" data-nro-lote="${lote.nroLote}">
+                                            <i class="fa-regular fa-pen-to-square"></i>
+                                        </button>
+                                    </td>
+                                    <td>
+                                        <button class="btn btn-danger btn-sm eliminar-lote" data-nro-lote="${lote.nroLote}">
+                                            <i class="fa-solid fa-trash"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                            `);
+                        });
+
+                        // Agregar la fila de totales al final de la tabla
+                        $('#bodyTablaLotes').append(`
+                            <tr>
+                                <td colspan="3"><strong>Total:</strong></td>
+                                <td><strong>${totalImporteOSM.toFixed(2)}</strong></td>
+                                <td><strong>${totalImporteEfectivoOSM.toFixed(2)}</strong></td>
+                                <td><strong>${totalImporteMunicipalidad.toFixed(2)}</strong></td>
+                                <td colspan="5"></td> <!-- Celdas vacías para alinear -->
+                            </tr>
+                        `);
+
+                        // Manejador de eventos para celdas editables
+                        $('.editable').on('input', function () {
+                            const row = $(this).closest('tr');
+                            const importeEfectivoOSMCell = row.find('td[data-field="importeEfectivoOSM"]');
+
+                            // Calcular ImporteEfectivoOSM basado en el contenido de la fila
+                            const importeOSM = parseFloat(row.find('td[data-field="importeOSM"]').text()) || 0;
+                            const importeDebito = parseFloat(row.find('td[data-field="importeDebito"]').text()) || 0;
+                            const importeCredito = parseFloat(row.find('td[data-field="importeCredito"]').text()) || 0;
+                            const importeMunicipalidad = parseFloat(row.find('td[data-field="importeMunicipalidad"]').text()) || 0;
+
+                            // Aquí puedes añadir la lógica de cálculo para ImporteEfectivoOSM
+                            const nuevoImporteEfectivoOSM = importeOSM - (importeDebito + importeCredito + importeMunicipalidad);
+                            importeEfectivoOSMCell.text(nuevoImporteEfectivoOSM.toFixed(2));
+                        });
+                    },
+                    error: function (xhr) {
+                        mostrarToast('Error al listar los lotes: ' + xhr.responseText);
+                    }
+                });
+            });
+
+            // Manejador para botón de actualización
+            $(document).on('click', '.actualizar-lote', function () {
+                const row = $(this).closest('tr');
+                const nroLoteAntiguo = $(this).data('nro-lote');
+
+                // Extraer el valor del input date en lugar de usar .text()
+                let fechaTexto = row.find('td[data-field="fechaLote"] input').val().trim();
+
+                // No es necesario hacer la conversión si el valor ya está en formato yyyy-mm-dd
+                // Simplemente añadimos la parte "T00:00:00" al final
+                const FechaLote = `${fechaTexto}T00:00:00`; // Formato final yyyy-mm-ddT00:00:00yyyy-mm-ddT00:00:00
+
+                const NroLote = parseInt(row.find('td[data-field="nroLote"]').text()) || 0; // Convertir a entero
+                const Cajero = row.find('td[data-field="cajero"]').text();
+                const ImporteOSM = parseFloat(row.find('td[data-field="importeOSM"]').text()) || 0;
+                const ImporteEfectivoOSM = parseFloat(row.find('td[data-field="importeEfectivoOSM"]').text()) || 0;
+                const ImporteMunicipalidad = parseFloat(row.find('td[data-field="importeMunicipalidad"]').text()) || 0;
+                const ImporteCredito = parseFloat(row.find('td[data-field="importeCredito"]').text()) || 0;
+                const ImporteDebito = parseFloat(row.find('td[data-field="importeDebito"]').text()) || 0;
+                // Extraer los valores de cheques, separados por comas, y convertirlos en un array de floats
+                const Cheques = row.find('td[data-field="cheques"]').text().split(',').map(valor => parseFloat(valor.trim()) || 0);
+
+                const Otro = parseFloat(row.find('td[data-field="otro"]').text()) || 0;
+                const Comentarios = row.find('td[data-field="comentarios"]').text();
+                const FilePath = '.\\G\\ass.json'; // Ruta del archivo, puede ser estática o dinámica según tu implementación
+
+                // Crear el objeto para actualizar
+                const loteActualizado = {
+                    FechaLote,
+                    Cajero,
+                    NroLote,
+                    ImporteOSM,
+                    ImporteEfectivoOSM,
+                    ImporteMunicipalidad,
+                    ImporteCredito,
+                    ImporteDebito,
+                    Cheques,
+                    Otro,
+                    Comentarios,
+                    FilePath
+                };
+                // Preguntar si se desea modificar el lote
+                if (confirm("¿Deseas modificar este lote?")) {
+                    // Enviar la actualización a la API
+                    $.ajax({
+                        url: `http://localhost:5127/lotes/modificar/${nroLoteAntiguo}`,
+                        type: 'PUT',
+                        contentType: 'application/json',
+                        data: JSON.stringify(loteActualizado),
+                        success: function (response) {
+                            mostrarToast('Lote actualizado correctamente.');
+                        },
+                        error: function (xhr) {
+                            mostrarToast('Error al actualizar el lote: ' + xhr.responseText);
+                        }
+                    });
+                } else {
+                    // Si el usuario cancela, no se realiza ninguna acción
+                    mostrarToast('Modificación del lote cancelada.');
+                }
+            });
+
+            // Manejador para botón de eliminación
+            $(document).on('click', '.eliminar-lote', function () {
+                const nroLote = $(this).data('nro-lote');
+
+                // Confirmación de eliminación
+                if (confirm('¿Está seguro de que desea eliminar este lote?')) {
+                    $.ajax({
+                        url: `http://localhost:5127/lotes/eliminar/${nroLote}`,
+                        type: 'DELETE',
+                        success: function (response) {
+                            mostrarToast('Lote eliminado correctamente.');
+                        },
+                        error: function (xhr) {
+                            mostrarToast('Error al eliminar el lote: ' + xhr.responseText);
+                        }
+                    });
+                }
+            });
+
+            // Función para mostrar mensajes Toast
+            function mostrarToast(mensaje) {
+                // Implementación de toast aquí (puedes usar cualquier librería de notificaciones)
+                alert(mensaje); // Reemplazar con lógica de notificación adecuada
+            }
+        });
+    </script>
+
+
+</body>
+
+</html>
