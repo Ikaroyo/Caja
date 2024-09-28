@@ -17,8 +17,8 @@
 
 <body>
 
-    <div class="container mt-4">
-        <h1>Gestión de Lotes</h1>
+    <div class="container m-0">
+        <!-- <h1>Gestión de Lotes</h1> -->
         <ul class="nav nav-tabs" id="myTab" role="tablist">
             <li class="nav-item">
                 <a class="nav-link active" id="agregar-lote-tab" data-toggle="tab" href="#agregar-lote"
@@ -46,11 +46,11 @@
                         </select>
                     </div>
                     <div class="form-group">
-                        <label for="nroLote">Nro Lote:</label>
+                        <label for="nroLote">Nº Lote:</label>
                         <input type="number" class="form-control" id="nroLote" required>
                     </div>
                     <div class="form-group">
-                        <label for="importeOSM">Importe OSM:</label>
+                        <label for="importeOSM">OSM:</label>
                         <input type="number" step="0.01" class="form-control" id="importeOSM" value="0">
                     </div>
                     <div class="form-group">
@@ -58,15 +58,15 @@
                         <input type="number" class="form-control" id="importeEfectivoOSM" disabled>
                     </div>
                     <div class="form-group">
-                        <label for="importeMunicipalidad">Importe Municipalidad:</label>
+                        <label for="importeMunicipalidad">Municipalidad:</label>
                         <input type="number" step="0.01" class="form-control" id="importeMunicipalidad" value="0">
                     </div>
                     <div class="form-group">
-                        <label for="importeCredito">Importe T. Crédito:</label>
+                        <label for="importeCredito">Crédito:</label>
                         <input type="number" step="0.01" class="form-control" id="importeCredito" value="0">
                     </div>
                     <div class="form-group">
-                        <label for="importeDebito">Importe T. Débito:</label>
+                        <label for="importeDebito">Débito:</label>
                         <input type="number" step="0.01" class="form-control" id="importeDebito" value="0">
                     </div>
                     <div class="form-group">
@@ -84,7 +84,7 @@
                         <label for="comentarios">Comentarios:</label>
                         <textarea class="form-control" id="comentarios"></textarea>
                     </div>
-                    <button type="submit" class="btn btn-primary">Agregar Lote</button>
+                    <button type="submit" class="btn btn-primary">Guardar Lote</button>
                 </form>
             </div>
             <div class="tab-pane fade" id="listar-lotes" role="tabpanel">
@@ -104,21 +104,21 @@
                         <option value="Silvio">Silvio</option>
                     </select>
                 </div>
-                <button id="listarLotes" class="btn btn-secondary">Listar Lotes</button>
+                <button id="listarLotes" class="btn btn-secondary">Buscar Lotes</button>
                 <table class="table mt-3" id="tablaLotes">
                     <thead>
                         <tr>
-                            <th>Fecha Lote</th>
+                            <th>Fecha</th>
                             <th>Cajero</th>
-                            <th>Nro Lote</th>
-                            <th>Importe OSM</th>
-                            <th>Importe Efectivo OSM</th>
-                            <th>Importe Municipalidad</th>
-                            <th>Importe T. Crédito</th>
-                            <th>Importe T. Débito</th>
+                            <th>Nº Lote</th>
+                            <th>OSM</th>
+                            <th>Efectivo OSM</th>
+                            <th>Municipalidad</th>
+                            <th>Crédito</th>
+                            <th>Débito</th>
                             <th>Cheques</th>
                             <th>Otro</th>
-                            <th>Comentarios</th>
+                            <th>Notas</th>
                             <th>Acciones</th>
                         </tr>
                     </thead>
@@ -146,6 +146,7 @@
 
     <script>
         var filePathListarLotes = '.\\Caja\\ass.json';
+        var urlMain = 'https://localhost:7201/lotes/';
 
         $(document).ready(function () {
 
@@ -210,7 +211,7 @@
 
                 // Enviar nuevo lote a la API
                 $.ajax({
-                    url: 'https://localhost:7201/lotes/agregar',
+                    url: urlMain + 'agregar',
                     type: 'POST',
                     contentType: 'application/json',
                     data: JSON.stringify(nuevoLote),
@@ -229,7 +230,7 @@
                 const cajeroFiltro = $('#cajeroFiltro').val();
 
                 $.ajax({
-                    url: 'https://localhost:7201/lotes/listarEntreFechasYCajero',
+                    url: urlMain + 'listarEntreFechasYCajero',
                     type: 'GET',
                     data: {
                         fechaInicio,
@@ -371,7 +372,7 @@
                 if (confirm("¿Deseas modificar este lote?")) {
                     // Enviar la actualización a la API
                     $.ajax({
-                        url: `https://localhost:7201/lotes/modificar/${nroLoteAntiguo}`,
+                        url: urlMain + `modificar/${nroLoteAntiguo}`,
                         type: 'PUT',
                         contentType: 'application/json',
                         data: JSON.stringify(loteActualizado),
@@ -395,7 +396,7 @@
                 // Confirmación de eliminación
                 if (confirm('¿Está seguro de que desea eliminar este lote?')) {
                     $.ajax({
-                        url: `https://localhost:7201/lotes/eliminar/${nroLote}`,
+                        url: urlMain + `eliminar/${nroLote}`,
                         type: 'DELETE',
                         success: function (response) {
                             mostrarToast('Lote eliminado correctamente.');
