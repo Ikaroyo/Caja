@@ -210,7 +210,7 @@
 
                 // Enviar nuevo lote a la API
                 $.ajax({
-                    url: 'http://localhost:5127/lotes/agregar',
+                    url: 'https://localhost:7201/lotes/agregar',
                     type: 'POST',
                     contentType: 'application/json',
                     data: JSON.stringify(nuevoLote),
@@ -229,7 +229,7 @@
                 const cajeroFiltro = $('#cajeroFiltro').val();
 
                 $.ajax({
-                    url: 'http://localhost:5127/lotes/listarEntreFechasYCajero',
+                    url: 'https://localhost:7201/lotes/listarEntreFechasYCajero',
                     type: 'GET',
                     data: {
                         fechaInicio,
@@ -371,7 +371,7 @@
                 if (confirm("¿Deseas modificar este lote?")) {
                     // Enviar la actualización a la API
                     $.ajax({
-                        url: `http://localhost:5127/lotes/modificar/${nroLoteAntiguo}`,
+                        url: `https://localhost:7201/lotes/modificar/${nroLoteAntiguo}`,
                         type: 'PUT',
                         contentType: 'application/json',
                         data: JSON.stringify(loteActualizado),
@@ -395,7 +395,7 @@
                 // Confirmación de eliminación
                 if (confirm('¿Está seguro de que desea eliminar este lote?')) {
                     $.ajax({
-                        url: `http://localhost:5127/lotes/eliminar/${nroLote}`,
+                        url: `https://localhost:7201/lotes/eliminar/${nroLote}`,
                         type: 'DELETE',
                         success: function (response) {
                             mostrarToast('Lote eliminado correctamente.');
