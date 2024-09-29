@@ -68,23 +68,28 @@
 
     <script>
 
-        // function to populate the form with the config.json values config.json its in the same folder as the html file
         function populateForm() {
-            // alert my current directory
-            alert("Current directory: " + window.location.pathname);
-            // .\config.json is the path to the config.json file
-            fetch('./HTML/Config.json')
+            // populates the form with the current settings from the endpoint getSettings
+            const urlMainJson = document.getElementById('urlMainJson');
+            const isRelative = document.getElementById('isRelative');
+            const filePath = document.getElementById('filePath');
+            const youtubeCheck = document.getElementById('youtubeCheck');
+
+            var urlMain = 'http://localhost:5000/lotes/';
+
+            fetch('http://localhost:5000/lotes/getSettings')
                 .then(response => response.json())
                 .then(data => {
-                    document.getElementById('filePath').value = data.filePath;
-                    document.getElementById('isRelative').checked = data.isRelative;
-                    document.getElementById('urlMainJson').value = data.urlMainJson;
-                    document.getElementById('youtubeCheck').checked = data.Youtube;
+                    urlMainJson.value = data.urlMainJson;
+                    isRelative.checked = data.isRelative;
+                    filePath.value = data.filePath;
+                    youtubeCheck.checked = data.Youtube;
+                    alert("Se han cargado los datos correctamente");
                 })
-                .catch(error => {
-                    console.error('Error fetching JSON data:', error);
-                });
+                .catch(error => console.error(error));
         }
+
+
         populateForm();
         function notifyApp() {
             const isChecked = document.getElementById('youtubeCheck').checked;
