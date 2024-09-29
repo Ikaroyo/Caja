@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Page Not Found</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            background-color: #121212;
+            color: #ffffff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .container {
+            text-align: center;
+            z-index: 1;
+        }
+
+        h1 {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+        }
+
+        p {
+            font-size: 1.5rem;
+        }
+
+        .drop {
+            position: absolute;
+            background-color: #007bff;
+            border-radius: 50%;
+            opacity: 0.7;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>404</h1>
+        <p>Page Not Found</p>
+    </div>
+
+    <script>
+        function createDrop() {
+            const drop = document.createElement('div');
+            drop.classList.add('drop');
+            const size = Math.random() * 5 + 2;
+            drop.style.width = `${size}px`;
+            drop.style.height = `${size}px`;
+            drop.style.left = `${Math.random() * window.innerWidth}px`;
+            drop.style.top = '-10px';
+            document.body.appendChild(drop);
+
+            let position = -10;
+            let speed = Math.random() * 2 + 1;
+            let opacity = 0.7;
+
+            function animate() {
+                position += speed;
+                speed += 0.1;
+                opacity -= 0.001;
+                drop.style.top = `${position}px`;
+                drop.style.opacity = opacity;
+
+                if (position < window.innerHeight && opacity > 0) {
+                    requestAnimationFrame(animate);
+                } else {
+                    drop.remove();
+                }
+            }
+
+            animate();
+        }
+
+        setInterval(createDrop, 50);
+    </script>
+</body>
+
+</html>
