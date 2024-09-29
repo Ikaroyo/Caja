@@ -145,8 +145,37 @@
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 
     <script>
-        // http://localhost:5000/lotes/getSettings para obtener la configuración y de ahi cajeroDefault para el list con ajax
+        // onChange the cajero y cajeroFiltro llamar a http://localhost:5000/lotes/setCajeroDefault es un HttpPut, con ajax
 
+
+        document.getElementById('cajero').addEventListener('change', () => {
+            const cajero = document.getElementById('cajero').value;
+            $.ajax({
+                url: 'http://localhost:5000/lotes/setCajeroDefault',
+                type: 'PUT',
+                data: { cajero },
+                success: function (data) {
+                    console.log(data);
+                }
+            });
+        });
+
+
+        document.getElementById('cajeroFiltro').addEventListener('change', () => {
+            const cajeroFiltro = document.getElementById('cajeroFiltro').value;
+            $.ajax({
+                url: 'http://localhost:5000/lotes/setCajeroFiltro',
+                type: 'PUT',
+                data: { cajeroFiltro },
+                success: function (data) {
+                    console.log(data);
+                }
+            });
+        });
+
+
+
+        // http://localhost:5000/lotes/getSettings para obtener la configuración y de ahi cajeroDefault para el list con ajax
 
         $.ajax({
             url: 'http://localhost:5000/lotes/getSettings',
