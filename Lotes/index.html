@@ -147,28 +147,36 @@
     <script>
         // onChange the cajero y cajeroFiltro llamar a http://localhost:5000/lotes/setCajeroDefault es un HttpPut, con ajax
 
-
         document.getElementById('cajero').addEventListener('change', () => {
             const cajero = document.getElementById('cajero').value;
             $.ajax({
                 url: 'http://localhost:5000/lotes/setCajeroDefault',
                 type: 'PUT',
-                data: { cajero },
+                contentType: 'application/json',
+                data: JSON.stringify({ cajero: cajero }), // Envíalo como un objeto
                 success: function (data) {
                     console.log(data);
+                },
+                error: function (xhr, status, error) {
+                    console.error(xhr.responseText);
                 }
             });
         });
 
 
+
         document.getElementById('cajeroFiltro').addEventListener('change', () => {
-            const cajeroFiltro = document.getElementById('cajeroFiltro').value;
+            const cajero = document.getElementById('cajeroFiltro').value;
             $.ajax({
-                url: 'http://localhost:5000/lotes/setCajeroFiltro',
+                url: 'http://localhost:5000/lotes/setCajeroDefault',
                 type: 'PUT',
-                data: { cajeroFiltro },
+                contentType: 'application/json',
+                data: JSON.stringify({ cajero: cajero }), // Envíalo como un objeto
                 success: function (data) {
                     console.log(data);
+                },
+                error: function (xhr, status, error) {
+                    console.error(xhr.responseText);
                 }
             });
         });
