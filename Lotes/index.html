@@ -148,15 +148,15 @@
 
         // fetch https://ikaroyo.github.io/Caja/Config/Config.json para obtener la configuración, filePathListarLotes y urlMain
 
-        var filePathListarLotes = '';
-        var urlMainListarLotes = '';
+        var filePathListarLotes = '.\\Caja\\lotes.json';
+        var urlMain = 'http://localhost:5000/lotes/';
 
         fetch('https://ikaroyo.github.io/Caja/Config/Config.json')
             .then(response => response.json())
             .then(data => {
                 const { filePathListarLotes, urlMain } = data;
                 filePathListarLotes = filePath;
-                urlMainListarLotes = urlMain;
+                urlMain = urlMainJson;
             })
             .catch(error => console.error(error));
 
