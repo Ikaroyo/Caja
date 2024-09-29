@@ -146,11 +146,19 @@
 
     <script>
 
-        // obtener el filePath y la url desde el link https://ikaroyo.github.io/Caja/Config/config.json de la variable
+        // fetch https://ikaroyo.github.io/Caja/Config/Config.json para obtener la configuración, filePathListarLotes y urlMain
 
-        var filePathListarLotes = '.\\Caja\\lotes.json';
-        var urlMain = 'http://localhost:5000/lotes/';
+        var filePathListarLotes = '';
+        var urlMainListarLotes = '';
 
+        fetch('https://ikaroyo.github.io/Caja/Config/Config.json')
+            .then(response => response.json())
+            .then(data => {
+                const { filePathListarLotes, urlMain } = data;
+                $('#filePathListarLotes').val(filePathListarLotes);
+                $('#urlMainListarLotes').val(urlMain);
+            })
+            .catch(error => console.error(error));
 
         $(document).ready(function () {
 
