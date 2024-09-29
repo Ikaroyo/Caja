@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Settings</title>
+</head>
+
+<body>
+    <label for="youtubeCheck">Mostrar YouTube</label>
+    <input type="checkbox" id="youtubeCheck" onclick="notifyApp()" />
+
+    <script>
+        function notifyApp() {
+            const isChecked = document.getElementById('youtubeCheck').checked;
+            // Llamar a la función de .NET con el estado del checkbox
+            window.chrome.webview.postMessage(isChecked);
+        }
+    </script>
+</body>
+
+</html>
