@@ -391,6 +391,7 @@
                         data: JSON.stringify(loteActualizado),
                         success: function (response) {
                             mostrarToast('Lote actualizado correctamente.');
+                            $('#listarLotes').click();
                         },
                         error: function (xhr) {
                             mostrarToast('Error al actualizar el lote: ' + xhr.responseText);
