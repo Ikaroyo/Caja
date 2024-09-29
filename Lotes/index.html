@@ -413,6 +413,8 @@
                         type: 'DELETE',
                         success: function (response) {
                             mostrarToast('Lote eliminado correctamente.');
+                            // listarLotes click
+                            $('#listarLotes').click();
                         },
                         error: function (xhr) {
                             mostrarToast('Error al eliminar el lote: ' + xhr.responseText);
