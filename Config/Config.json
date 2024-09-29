@@ -4,5 +4,5 @@
     "filePath": "\\\\CAJA02\\Users\\sigem\\Desktop\\Prueba\\lotes.json",
     "isRelative": false,
     "urlMainJson": "http://localhost:5000/lotes/",
-    "Youtube": true
+    "Youtube": false
 }
