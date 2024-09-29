@@ -71,7 +71,7 @@
         // function to populate the form with the config.json values config.json its in the same folder as the html file
         function populateForm() {
             // .\config.json is the path to the config.json file
-            fetch('./HMTL/config.json')
+            fetch('./HMTL/Config.json')
                 .then(response => response.json())
                 .then(data => {
                     document.getElementById('filePath').value = data.filePath;
