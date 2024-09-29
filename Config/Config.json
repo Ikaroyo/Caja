@@ -4,5 +4,5 @@
     "filePath": ".\\HTML\\Lotes.json",
     "isRelative": true,
     "urlMainJson": "http://localhost:5000/lotes/",
-    "Youtube": true
+    "Youtube": false
 }
