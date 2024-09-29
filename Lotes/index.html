@@ -155,7 +155,7 @@
             .then(response => response.json())
             .then(data => {
                 const { filePathListarLotes, urlMain } = data;
-                filePathListarLotes = filePathListarLotes;
+                filePathListarLotes = filePath;
                 urlMainListarLotes = urlMain;
             })
             .catch(error => console.error(error));
