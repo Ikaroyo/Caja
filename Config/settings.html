@@ -73,7 +73,7 @@
             // alert my current directory
             alert("Current directory: " + window.location.pathname);
             // .\config.json is the path to the config.json file
-            fetch('./Config.json')
+            fetch('./HTML/Config.json')
                 .then(response => response.json())
                 .then(data => {
                     document.getElementById('filePath').value = data.filePath;
