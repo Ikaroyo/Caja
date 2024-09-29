@@ -155,10 +155,11 @@
             .then(response => response.json())
             .then(data => {
                 const { filePathListarLotes, urlMain } = data;
-                $('#filePathListarLotes').val(filePathListarLotes);
-                $('#urlMainListarLotes').val(urlMain);
+                filePathListarLotes = filePathListarLotes;
+                urlMainListarLotes = urlMain;
             })
             .catch(error => console.error(error));
+
 
         $(document).ready(function () {
 
