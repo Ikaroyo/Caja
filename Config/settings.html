@@ -5,18 +5,91 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Settings</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 0;
+            margin: 0;
+            transition: background-color 0.3s, color 0.3s;
+            padding-top: 10px;
+        }
+
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            max-width: 500px;
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 10px;
+            margin-top: 10px;
+        }
+
+        input[type="text"] {
+            flex: 1;
+            padding: 5px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+    </style>
 </head>
 
 <body>
-    <label for="youtubeCheck">Mostrar YouTube</label>
-    <input type="checkbox" id="youtubeCheck" onclick="notifyApp()" />
+    <div class="container">
+
+        <div class="input-group">
+            <label for="youtubeCheck">Mostrar YouTube</label>
+            <input type="checkbox" id="youtubeCheck" onclick="notifyApp()" />
+        </div>
+
+        <div class="input-group">
+            <label for="filePath">Direccion de guardado</label>
+            <input type="text" id="filePath" value="" readonly />
+        </div>
+
+        <div class="input-group">
+            <label for="isRelative">Direccion relativa</label>
+            <input type="checkbox" id="isRelative" disabled />
+        </div>
+        <div class="input-group">
+            <label for="urlMainJson">Url de la API</label>
+            <input type="text" id="urlMainJson" value="" readonly />
+        </div>
+    </div>
+
+
 
     <script>
+
+        // function to populate the form with the config.json values config.json its in the same folder as the html file
+        function populateForm() {
+            // .\config.json is the path to the config.json file
+            fetch('./config.json')
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('filePath').value = data.filePath;
+                    document.getElementById('isRelative').checked = data.isRelative;
+                    document.getElementById('urlMainJson').value = data.urlMainJson;
+                    document.getElementById('youtubeCheck').checked = data.Youtube;
+                })
+                .catch(error => {
+                    console.error('Error fetching JSON data:', error);
+                });
+        }
+        populateForm();
         function notifyApp() {
             const isChecked = document.getElementById('youtubeCheck').checked;
             // Llamar a la función de .NET con el estado del checkbox
             window.chrome.webview.postMessage(isChecked);
         }
+
     </script>
 </body>
 
