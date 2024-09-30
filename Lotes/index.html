@@ -34,7 +34,7 @@
                 <form id="formAgregarLote">
                     <div class="form-group">
                         <label for="fechaLote">Fecha Lote:</label>
-                        <input type="date" class="form-control" id="fechaLote">
+                        <input type="date" class="form-control" id="fechaLote" required>
                     </div>
 
                     <div class="form-group">
@@ -47,11 +47,12 @@
                     </div>
                     <div class="form-group">
                         <label for="nroLote">Nº Lote:</label>
-                        <input type="number" class="form-control" id="nroLote" required>
+                        <input type="number" class="form-control" id="nroLote" required min="403280000"
+                            max="4294967295">
                     </div>
                     <div class="form-group">
                         <label for="importeOSM">OSM:</label>
-                        <input type="number" step="0.01" class="form-control" id="importeOSM" value="0">
+                        <input type="number" step="0.01" class="form-control" id="importeOSM" value="0" min="0">
                     </div>
                     <div class="form-group">
                         <label for="importeEfectivoOSM">Efectivo OSM:</label>
@@ -59,26 +60,28 @@
                     </div>
                     <div class="form-group">
                         <label for="importeMunicipalidad">Municipalidad:</label>
-                        <input type="number" step="0.01" class="form-control" id="importeMunicipalidad" value="0">
+                        <input type="number" step="0.01" class="form-control" id="importeMunicipalidad" value="0"
+                            min="0">
                     </div>
                     <div class="form-group">
                         <label for="importeCredito">Crédito:</label>
-                        <input type="number" step="0.01" class="form-control" id="importeCredito" value="0">
+                        <input type="number" step="0.01" class="form-control" id="importeCredito" value="0" min="0">
                     </div>
                     <div class="form-group">
                         <label for="importeDebito">Débito:</label>
-                        <input type="number" step="0.01" class="form-control" id="importeDebito" value="0">
+                        <input type="number" step="0.01" class="form-control" id="importeDebito" value="0" min="0">
                     </div>
                     <div class="form-group">
                         <label>Cheques:</label>
                         <div id="chequesContainer">
-                            <input type="number" step="0.01" class="form-control mb-2" placeholder="Cheque" value="0">
+                            <input type="number" step="0.01" class="form-control mb-2" placeholder="Cheque" value="0"
+                                min="0">
                         </div>
                         <button type="button" class="btn btn-secondary" id="agregarCheque">Agregar Cheque</button>
                     </div>
                     <div class="form-group">
                         <label for="otro">Otro:</label>
-                        <input type="number" step="0.01" class="form-control" id="otro" value="0">
+                        <input type="number" step="0.01" class="form-control" id="otro" value="0" min="0">
                     </div>
                     <div class="form-group">
                         <label for="comentarios">Comentarios:</label>
@@ -213,7 +216,7 @@
             $('#fechaLote').val(new Date().toISOString().split('T')[0]);
 
             $('#agregarCheque').on('click', function () {
-                $('#chequesContainer').append('<input type="number" step="0.01" class="form-control mb-2" placeholder="Cheque" value="0">');
+                $('#chequesContainer').append('<input type="number" step="0.01" class="form-control mb-2" placeholder="Cheque" value="0" min="0">');
             });
 
             // Función para calcular Efectivo OSM
@@ -268,19 +271,34 @@
 
                 console.log(nuevoLote);
 
-                // Enviar nuevo lote a la API
-                $.ajax({
-                    url: urlMain + 'agregar',
-                    type: 'POST',
-                    contentType: 'application/json',
-                    data: JSON.stringify(nuevoLote),
-                    success: function (response) {
-                        mostrarToast('Lote agregado correctamente.');
-                    },
-                    error: function (xhr) {
-                        mostrarToast('Error al agregar el lote: ' + xhr.responseText);
-                    }
-                });
+                // ordenar informacion para mostrar en alert
+                const nuevoLoteString = "Nro Lote: " + nuevoLote.nroLote + "\n" +
+                    "Fecha: " + nuevoLote.fechaLote + "\n" + "Cajero: " + nuevoLote.cajero + "\n" + "Importe OSM: " + nuevoLote.importeOSM.toFixed(2) + "\n" + "Importe Efectivo OSM: " + nuevoLote.importeEfectivoOSM.toFixed(2) + "\n" + "Importe de Municipalidad: " + nuevoLote.importeMunicipalidad.toFixed(2) + "\n" + "Importe de Credito: " + nuevoLote.importeCredito.toFixed(2) + "\n" + "Importe de Debito: " + nuevoLote.importeDebito.toFixed(2) + "\n" + "Cheques: Podra revisarlos al listar" + "\n" + "Otro: " + nuevoLote.otro.toFixed(2) + "\n";
+
+                // Mostrar un alert con el lote de confirmación con los valores del lote
+
+                if (confirm('¿Está seguro de que desea agregar este lote?' + '\n' + nuevoLoteString)) {
+
+
+
+                    // Enviar nuevo lote a la API
+                    $.ajax({
+                        url: urlMain + 'agregar',
+                        type: 'POST',
+                        contentType: 'application/json',
+                        data: JSON.stringify(nuevoLote),
+                        success: function (response) {
+                            mostrarToast('Lote agregado correctamente.');
+                        },
+                        error: function (xhr) {
+                            mostrarToast('Error al agregar el lote: ' + xhr.responseText);
+                        }
+                    });
+
+                }
+                else {
+                    alert('Lote no agregado.');
+                }
             });
 
             $('#listarLotes').on('click', function () {
@@ -329,15 +347,15 @@
     <input type="date" value="${lote.fechaLote}">
 </td>
 
-                                    <td contenteditable="true" class="editable" data-field="cajero">${lote.cajero}</td>
-                                    <td contenteditable="true" class="editable" data-field="nroLote">${lote.nroLote}</td>
-                                    <td contenteditable="true" class="editable" data-field="importeOSM">${lote.importeOSM.toFixed(2)}</td>
+                                    <td contenteditable="true" class="editable" data-field="cajero" required>${lote.cajero}</td>
+                                    <td contenteditable="true" class="editable" data-field="nroLote" required min="403280000">${lote.nroLote}</td>
+                                    <td contenteditable="true" class="editable" data-field="importeOSM" required min="0">${lote.importeOSM.toFixed(2)}</td>
                                     <td data-field="importeEfectivoOSM">${lote.importeEfectivoOSM.toFixed(2)}</td>
-                                    <td contenteditable="true" class="editable" data-field="importeMunicipalidad">${lote.importeMunicipalidad.toFixed(2)}</td>
-                                    <td contenteditable="true" class="editable" data-field="importeCredito">${lote.importeCredito.toFixed(2)}</td>
-                                    <td contenteditable="true" class="editable" data-field="importeDebito">${lote.importeDebito.toFixed(2)}</td>
+                                    <td contenteditable="true" class="editable" data-field="importeMunicipalidad" required min="0">${lote.importeMunicipalidad.toFixed(2)}</td>
+                                    <td contenteditable="true" class="editable" data-field="importeCredito" required min="0">${lote.importeCredito.toFixed(2)}</td>
+                                    <td contenteditable="true" class="editable" data-field="importeDebito" required min="0">${lote.importeDebito.toFixed(2)}</td>
                                     <td contenteditable="true" class="editable" data-field="cheques">${chequesDisplay}</td>
-                                    <td contenteditable="true" class="editable" data-field="otro">${lote.otro.toFixed(2)}</td>
+                                    <td contenteditable="true" class="editable" data-field="otro" required min="0">${lote.otro.toFixed(2)}</td>
                                     <td contenteditable="true" class="editable" data-field="comentarios">${lote.comentarios}</td>
                                     <td>
                                         <button class="btn btn-success btn-sm actualizar-lote" data-nro-lote="${lote.nroLote}">
