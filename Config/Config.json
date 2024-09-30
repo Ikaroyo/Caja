@@ -1,7 +1,7 @@
 {
     "url_calculadora": "https://ikaroyo.github.io/Caja/Calculadora/",
     "url_lotes": "https://ikaroyo.github.io/Caja/Lotes/",
-    "filePath": "\\\\CAJA02\\Users\\sigem\\Desktop\\Prueba\\Lotes.json",
+    "filePath": "\\\\CAJA02\\Users\\sigem\\Desktop\\Lotes\\Lotes.json",
     "isRelative": false,
     "urlMainJson": "http://localhost:5000/lotes/",
     "Youtube": false,
